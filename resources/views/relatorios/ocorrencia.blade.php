@@ -45,6 +45,7 @@
     <div class="header">
         <h1>RELATÓRIO DE OCORRÊNCIA</h1>
         <h2>Sistema de Gestão de Ocorrências</h2>
+        <p><strong>Data do Relatório:</strong> {{ \Carbon\Carbon::parse($dataRelatorio)->format('d/m/Y') }}</p>
     </div>
 
     <div class="info-section">
@@ -165,6 +166,7 @@
 
     <div class="footer">
         <p>Relatório gerado em: {{ now()->format('d/m/Y H:i:s') }}</p>
+        <p>Data do relatório: {{ \Carbon\Carbon::parse($dataRelatorio)->format('d/m/Y') }}</p>
         <p>Sistema de Gestão de Ocorrências</p>
     </div>
 

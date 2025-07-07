@@ -21,8 +21,23 @@ class ListOcorrencias extends ListRecords
             $actions[] = Actions\Action::make('imprimir_relatorio_geral')
                 ->label('Imprimir Relatório Geral')
                 ->icon('heroicon-o-printer')
-                ->url(route('agente.relatorio.geral'))
-                ->openUrlInNewTab();
+                ->form([
+                    \Filament\Forms\Components\DatePicker::make('data_inicio')
+                        ->label('Data de Início')
+                        ->default(now()->startOfMonth())
+                        ->required(),
+                    \Filament\Forms\Components\DatePicker::make('data_fim')
+                        ->label('Data de Fim')
+                        ->default(now())
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $url = route('agente.relatorio.geral', [
+                        'data_inicio' => $data['data_inicio'],
+                        'data_fim' => $data['data_fim']
+                    ]);
+                    return redirect()->away($url);
+                });
         }
 
         return $actions;

@@ -89,8 +89,19 @@ class OcorrenciaResource extends Resource
                     ->label('Imprimir')
                     ->icon('heroicon-o-printer')
                     ->visible(fn ($record) => auth()->user()?->role === 'Agente' && $record->user_id === auth()->id())
-                    ->url(fn ($record) => route('ocorrencia.print', $record))
-                    ->openUrlInNewTab(),
+                    ->form([
+                        \Filament\Forms\Components\DatePicker::make('data_relatorio')
+                            ->label('Data do Relatório')
+                            ->default(now())
+                            ->required(),
+                    ])
+                    ->action(function (array $data, $record) {
+                        $url = route('ocorrencia.print', [
+                            'ocorrencia' => $record,
+                            'data_relatorio' => $data['data_relatorio']
+                        ]);
+                        return redirect()->away($url);
+                    }),
                 Tables\Actions\Action::make('visualizar_anexos')
                     ->label('Visualizar Anexos')
                     ->icon('heroicon-o-eye')

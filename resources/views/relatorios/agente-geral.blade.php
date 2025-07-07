@@ -79,6 +79,7 @@
     <div class="header">
         <h1>RELATÓRIO GERAL DO AGENTE</h1>
         <h2>Sistema de Gestão de Ocorrências</h2>
+        <p><strong>Período:</strong> {{ \Carbon\Carbon::parse($dataInicio)->format('d/m/Y') }} a {{ \Carbon\Carbon::parse($dataFim)->format('d/m/Y') }}</p>
     </div>
 
     <div class="info-section">
@@ -150,7 +151,7 @@
     <div class="stats">
         <div class="stat-item">
             <div class="stat-number">{{ $ocorrencias->count() }}</div>
-            <div class="stat-label">Total de Ocorrências</div>
+            <div class="stat-label">Total no Período</div>
         </div>
         <div class="stat-item">
             <div class="stat-number">{{ $ocorrencias->where('estado', 'Aberta')->count() }}</div>
@@ -227,6 +228,7 @@
 
     <div class="footer">
         <p>Relatório gerado em: {{ now()->format('d/m/Y H:i:s') }}</p>
+        <p>Período: {{ \Carbon\Carbon::parse($dataInicio)->format('d/m/Y') }} a {{ \Carbon\Carbon::parse($dataFim)->format('d/m/Y') }}</p>
         <p>Sistema de Gestão de Ocorrências</p>
     </div>
 
