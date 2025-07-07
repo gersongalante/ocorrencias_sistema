@@ -85,6 +85,12 @@ class OcorrenciaResource extends Resource
                     ->visible(fn ($record) => static::canEdit($record)),
                 Tables\Actions\ViewAction::make()
                     ->visible(fn ($record) => !static::canEdit($record)),
+                Tables\Actions\Action::make('imprimir_ocorrencia')
+                    ->label('Imprimir')
+                    ->icon('heroicon-o-printer')
+                    ->visible(fn ($record) => auth()->user()?->role === 'Agente' && $record->user_id === auth()->id())
+                    ->url(fn ($record) => route('ocorrencia.print', $record))
+                    ->openUrlInNewTab(),
                 Tables\Actions\Action::make('visualizar_anexos')
                     ->label('Visualizar Anexos')
                     ->icon('heroicon-o-eye')

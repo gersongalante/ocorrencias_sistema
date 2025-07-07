@@ -12,8 +12,19 @@ class ListOcorrencias extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
+        $actions = [
             Actions\CreateAction::make(),
         ];
+
+        // Adicionar botão de impressão de relatório para agentes
+        if (auth()->user()?->role === 'Agente') {
+            $actions[] = Actions\Action::make('imprimir_relatorio_geral')
+                ->label('Imprimir Relatório Geral')
+                ->icon('heroicon-o-printer')
+                ->url(route('agente.relatorio.geral'))
+                ->openUrlInNewTab();
+        }
+
+        return $actions;
     }
 }
