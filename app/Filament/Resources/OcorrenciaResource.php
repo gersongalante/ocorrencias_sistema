@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 
 class OcorrenciaResource extends Resource
 {
@@ -71,6 +73,27 @@ class OcorrenciaResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('visualizar_anexos')
+                    ->label('Visualizar Anexos')
+                    ->icon('heroicon-o-eye')
+                    ->visible(fn ($record) => !empty($record->anexos))
+                    ->action(function ($record) {})
+                    ->modalHeading('Anexos da Ocorrência')
+                    ->modalContent(function ($record) {
+                        if (empty($record->anexos)) {
+                            return new HtmlString('Nenhum anexo disponível.');
+                        }
+                        $html = '<ul class="space-y-2">';
+                        foreach ($record->anexos as $anexo) {
+                            $url = Storage::url($anexo);
+                            $nome = basename($anexo);
+                            $html .= "<li><a href='{$url}' target='_blank' class='text-blue-600 underline'>{$nome}</a></li>";
+                        }
+                        $html .= '</ul>';
+                        return new HtmlString($html);
+                    })
+                    ->modalSubmitAction(false)
+                    ->modalCancelActionLabel('Fechar'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -97,7 +120,6 @@ class OcorrenciaResource extends Resource
 
     public static function canViewAny(): bool
     {
-        $role = auth()->user()?->role;
-        return $role === 'Agente' || $role === 'Comandante';
+        return auth()->check();
     }
 }
