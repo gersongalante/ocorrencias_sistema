@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('ocorrencias', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Agente que registou
+            $table->foreignId('esquadra_id')->nullable()->constrained('esquadras')->nullOnDelete();
             $table->string('tipo');
             $table->dateTime('data_hora');
             $table->string('provincia');

@@ -49,6 +49,11 @@ class UserResource extends Resource
                         'Administrador' => 'Administrador',
                     ])
                     ->required(),
+                Forms\Components\Select::make('esquadra_id')
+                    ->label('Esquadra')
+                    ->relationship('esquadra', 'nome')
+                    ->searchable()
+                    ->required(),
             ]);
     }
 
@@ -60,6 +65,7 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('username')->label('Nome de Utilizador'),
                 Tables\Columns\TextColumn::make('email')->label('Email'),
                 Tables\Columns\TextColumn::make('role')->label('Papel'),
+                Tables\Columns\TextColumn::make('esquadra.nome')->label('Esquadra'),
             ])
             ->filters([
                 //

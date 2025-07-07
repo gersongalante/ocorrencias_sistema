@@ -61,4 +61,9 @@ class User extends Authenticatable
     {
         return $this->role === 'Agente';
     }
+
+    public function esquadra()
+    {
+        return $this->belongsTo(Esquadra::class);
+    }
 }

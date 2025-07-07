@@ -52,6 +52,13 @@ class OcorrenciaResource extends Resource
                     ->maxSize(10240)
                     ->acceptedFileTypes(['image/*', 'application/pdf'])
                     ->nullable(),
+                Forms\Components\Select::make('esquadra_id')
+                    ->label('Esquadra')
+                    ->relationship('esquadra', 'nome')
+                    ->searchable()
+                    ->required()
+                    ->disabled(fn() => auth()->user()?->role === 'Agente')
+                    ->default(fn() => auth()->user()?->esquadra_id),
             ]);
     }
 
@@ -67,6 +74,7 @@ class OcorrenciaResource extends Resource
                 Tables\Columns\TextColumn::make('bairro'),
                 Tables\Columns\TextColumn::make('rua')->label('Rua')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('estado')->label('Estado'),
+                Tables\Columns\TextColumn::make('esquadra.nome')->label('Esquadra'),
             ])
             ->filters([
                 //

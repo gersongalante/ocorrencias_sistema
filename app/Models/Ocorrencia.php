@@ -27,4 +27,9 @@ class Ocorrencia extends Model
         'anexos' => 'array',
         'data_hora' => 'datetime',
     ];
+
+    public function esquadra()
+    {
+        return $this->belongsTo(Esquadra::class);
+    }
 }
