@@ -75,6 +75,7 @@ class OcorrenciaResource extends Resource
                 Tables\Columns\TextColumn::make('rua')->label('Rua')->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('estado')->label('Estado'),
                 Tables\Columns\TextColumn::make('esquadra.nome')->label('Esquadra'),
+                Tables\Columns\TextColumn::make('user.name')->label('Agente'),
             ])
             ->filters([
                 //
