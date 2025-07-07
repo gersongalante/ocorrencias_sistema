@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Ocorrencia extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'tipo',
+        'data_hora',
+        'provincia',
+        'municipio',
+        'bairro',
+        'rua',
+        'vitimas',
+        'descricao',
+        'anexos',
+        'estado',
+    ];
+
+    protected $casts = [
+        'anexos' => 'array',
+        'data_hora' => 'datetime',
+    ];
+}

@@ -19,8 +19,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -44,5 +46,19 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Métodos auxiliares para RBAC
+    public function isAdmin(): bool
+    {
+        return $this->role === 'Administrador';
+    }
+    public function isComandante(): bool
+    {
+        return $this->role === 'Comandante';
+    }
+    public function isAgente(): bool
+    {
+        return $this->role === 'Agente';
     }
 }
