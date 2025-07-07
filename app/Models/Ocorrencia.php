@@ -11,6 +11,7 @@ class Ocorrencia extends Model
 
     protected $fillable = [
         'user_id',
+        'esquadra_id',
         'tipo',
         'data_hora',
         'provincia',
@@ -31,5 +32,10 @@ class Ocorrencia extends Model
     public function esquadra()
     {
         return $this->belongsTo(Esquadra::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -81,7 +81,10 @@ class OcorrenciaResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->visible(fn ($record) => static::canEdit($record)),
+                Tables\Actions\ViewAction::make()
+                    ->visible(fn ($record) => !static::canEdit($record)),
                 Tables\Actions\Action::make('visualizar_anexos')
                     ->label('Visualizar Anexos')
                     ->icon('heroicon-o-eye')
@@ -106,7 +109,8 @@ class OcorrenciaResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()?->role === 'Administrador'),
                 ]),
             ]);
     }
@@ -130,5 +134,52 @@ class OcorrenciaResource extends Resource
     public static function canViewAny(): bool
     {
         return auth()->check();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+        
+        // Administrador e Comandante veem todas as ocorrências
+        if ($user->role === 'Administrador' || $user->role === 'Comandante') {
+            return parent::getEloquentQuery();
+        }
+        
+        // Agente só vê ocorrências da sua esquadra
+        if ($user->role === 'Agente') {
+            return parent::getEloquentQuery()->where('esquadra_id', $user->esquadra_id);
+        }
+        
+        return parent::getEloquentQuery();
+    }
+
+    public static function canEdit($record): bool
+    {
+        $user = auth()->user();
+        
+        // Administrador pode editar tudo
+        if ($user->role === 'Administrador') {
+            return true;
+        }
+        
+        // Comandante só pode editar ocorrências da sua esquadra
+        if ($user->role === 'Comandante') {
+            return $record->esquadra_id === $user->esquadra_id;
+        }
+        
+        // Agente só pode editar suas próprias ocorrências
+        if ($user->role === 'Agente') {
+            return $record->user_id === $user->id;
+        }
+        
+        return false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        $user = auth()->user();
+        
+        // Apenas administrador pode deletar
+        return $user->role === 'Administrador';
     }
 }
