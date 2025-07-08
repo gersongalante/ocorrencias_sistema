@@ -27,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Sistema de Gestão de Ocorrências')
             ->colors([
                 'primary' => Color::Amber,
             ])
