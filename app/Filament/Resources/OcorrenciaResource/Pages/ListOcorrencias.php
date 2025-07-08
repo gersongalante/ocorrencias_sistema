@@ -40,6 +40,45 @@ class ListOcorrencias extends ListRecords
                 });
         }
 
+        // Adicionar botão de impressão de relatório por agente para comandantes
+        if (auth()->user()?->role === 'Comandante') {
+            $actions[] = Actions\Action::make('imprimir_relatorio_por_agente')
+                ->label('Imprimir Relatório por Agente')
+                ->icon('heroicon-o-printer')
+                ->form([
+                    \Filament\Forms\Components\Select::make('agente_id')
+                        ->label('Agente')
+                        ->options(function () {
+                            $user = auth()->user();
+                            if (!$user || !$user->esquadra) {
+                                return [];
+                            }
+                            
+                            return \App\Models\User::where('esquadra_id', $user->esquadra->id)
+                                ->where('role', 'Agente')
+                                ->pluck('name', 'id');
+                        })
+                        ->required()
+                        ->searchable(),
+                    \Filament\Forms\Components\DatePicker::make('data_inicio')
+                        ->label('Data de Início')
+                        ->default(now()->startOfMonth())
+                        ->required(),
+                    \Filament\Forms\Components\DatePicker::make('data_fim')
+                        ->label('Data de Fim')
+                        ->default(now())
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $url = route('comandante.relatorio.esquadra', [
+                        'agente_id' => $data['agente_id'],
+                        'data_inicio' => $data['data_inicio'],
+                        'data_fim' => $data['data_fim']
+                    ]);
+                    return redirect()->away($url);
+                });
+        }
+
         return $actions;
     }
 }
