@@ -110,3 +110,24 @@ Route::get('/comandante/relatorio-esquadra', function (\Illuminate\Http\Request 
     
     return view('relatorios.comandante-esquadra', compact('esquadra', 'ocorrencias', 'agentes', 'dataInicio', 'dataFim'));
 })->name('comandante.relatorio.esquadra');
+
+Route::get('/comandante/relatorio-pessoal', function (\Illuminate\Http\Request $request) {
+    // Verificar se o usuário é comandante
+    if (auth()->user()?->role !== 'Comandante') {
+        abort(403);
+    }
+    
+    $user = auth()->user();
+    
+    // Obter parâmetros de data
+    $dataInicio = $request->get('data_inicio', now()->startOfMonth()->format('Y-m-d'));
+    $dataFim = $request->get('data_fim', now()->format('Y-m-d'));
+    
+    // Buscar apenas as ocorrências registadas pelo comandante
+    $ocorrencias = \App\Models\Ocorrencia::where('user_id', $user->id)
+        ->whereBetween('data_hora', [$dataInicio . ' 00:00:00', $dataFim . ' 23:59:59'])
+        ->orderBy('data_hora', 'desc')
+        ->get();
+    
+    return view('relatorios.comandante-pessoal', compact('user', 'ocorrencias', 'dataInicio', 'dataFim'));
+})->name('comandante.relatorio.pessoal');

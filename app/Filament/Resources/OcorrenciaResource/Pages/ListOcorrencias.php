@@ -77,6 +77,50 @@ class ListOcorrencias extends ListRecords
                     ]);
                     return redirect()->away($url);
                 });
+
+            // Adicionar botão de impressão do relatório pessoal do comandante
+            $actions[] = Actions\Action::make('imprimir_relatorio_pessoal')
+                ->label('Imprimir Meu Relatório')
+                ->icon('heroicon-o-document-text')
+                ->form([
+                    \Filament\Forms\Components\DatePicker::make('data_inicio')
+                        ->label('Data de Início')
+                        ->default(now()->startOfMonth())
+                        ->required(),
+                    \Filament\Forms\Components\DatePicker::make('data_fim')
+                        ->label('Data de Fim')
+                        ->default(now())
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $url = route('comandante.relatorio.pessoal', [
+                        'data_inicio' => $data['data_inicio'],
+                        'data_fim' => $data['data_fim']
+                    ]);
+                    return redirect()->away($url);
+                });
+
+            // Adicionar botão de impressão do relatório geral da esquadra
+            $actions[] = Actions\Action::make('imprimir_relatorio_geral_esquadra')
+                ->label('Imprimir Relatório Geral da Esquadra')
+                ->icon('heroicon-o-building-office')
+                ->form([
+                    \Filament\Forms\Components\DatePicker::make('data_inicio')
+                        ->label('Data de Início')
+                        ->default(now()->startOfMonth())
+                        ->required(),
+                    \Filament\Forms\Components\DatePicker::make('data_fim')
+                        ->label('Data de Fim')
+                        ->default(now())
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $url = route('comandante.relatorio.esquadra', [
+                        'data_inicio' => $data['data_inicio'],
+                        'data_fim' => $data['data_fim']
+                    ]);
+                    return redirect()->away($url);
+                });
         }
 
         return $actions;

@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Esquadra::class);
     }
+
+    public function ocorrencias()
+    {
+        return $this->hasMany(Ocorrencia::class);
+    }
 }
